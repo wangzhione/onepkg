@@ -72,15 +72,15 @@ func BenchmarkPool(b *testing.B) {
 	}
 
 	/*
-	   Running tool: /opt/homebrew/bin/go test -benchmem -run=^$ -bench ^BenchmarkPool$ onepkg/util/worker -v
+		Running tool: /opt/homebrew/bin/go test -benchmem -run=^$ -bench ^BenchmarkPool$ onepkg/util/worker -v
 
-	   goos: darwin
-	   goarch: arm64
-	   pkg: onepkg/util/worker
-	   BenchmarkPool
-	   BenchmarkPool-10    	     272	   4382166 ns/op	  198323 B/op	   10785 allocs/op
-	   PASS
-	   ok  	onepkg/util/worker	2.761s
+		goos: darwin
+		goarch: arm64
+		pkg: onepkg/util/worker
+		BenchmarkPool
+		BenchmarkPool-10    	     267	   4386748 ns/op	  202664 B/op	   10718 allocs/op
+		PASS
+		ok  	onepkg/util/worker	2.031s
 	*/
 }
 
@@ -102,14 +102,14 @@ func BenchmarkGo(b *testing.B) {
 	}
 
 	/*
-	   Running tool: /opt/homebrew/bin/go test -benchmem -run=^$ -bench ^BenchmarkGo$ onepkg/util/worker -v
+		Running tool: /opt/homebrew/bin/go test -benchmem -run=^$ -bench ^BenchmarkGo$ onepkg/util/worker -v
 
-	   goos: darwin
-	   goarch: arm64
-	   pkg: onepkg/util/worker
-	   BenchmarkGo
-	   BenchmarkGo-10    	     151	   8057060 ns/op	  160004 B/op	   10000 allocs/op
-	   PASS
-	   ok  	onepkg/util/worker	2.406s
+		goos: darwin
+		goarch: arm64
+		pkg: onepkg/util/worker
+		BenchmarkGo
+		BenchmarkGo-10    	     146	   9122579 ns/op	  167999 B/op	   10018 allocs/op
+		PASS
+		ok  	onepkg/util/worker	2.391s
 	*/
 }

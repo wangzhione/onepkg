@@ -54,35 +54,33 @@ func (w *worker) runTask(t *task) {
 }
 
 func (w *worker) run() {
-	go func() {
-		for {
-			w.pool.taskLock.Lock()
+	for {
+		w.pool.taskLock.Lock()
 
-			// if there's no task to do, exit
-			if w.pool.taskHead == nil {
-				// worker exit, count inc
-				atomic.AddInt32(&w.pool.work, -1)
-				w.pool.taskLock.Unlock()
-				w.recycle()
-				return
-			}
-
-			t := w.pool.taskHead
-			w.pool.taskHead = w.pool.taskHead.next
-
-			// task count inc
-			atomic.AddInt32(&w.pool.task, -1)
+		// if there's no task to do, exit
+		if w.pool.taskHead == nil {
+			// worker exit, count inc
+			atomic.AddInt32(&w.pool.work, -1)
 			w.pool.taskLock.Unlock()
-
-			w.runTask(t)
-
-			// 归还资源
-			t.recycle()
+			w.recycle()
+			return
 		}
-	}()
+
+		t := w.pool.taskHead
+		w.pool.taskHead = w.pool.taskHead.next
+
+		// task count inc
+		atomic.AddInt32(&w.pool.task, -1)
+		w.pool.taskLock.Unlock()
+
+		w.runTask(t)
+
+		// 归还资源
+		t.recycle()
+	}
 }
 
-// pool 业务池子, 目前没有支持丢弃策略, 默认无限续杯. 更好用处是对于需要限流, 限制 max qps 场景
+// pool 业务池子, 当前没有支持丢弃策略, 默认无限续杯. 常见使用于 限流, 限制 max qps 等场景
 type pool struct {
 	// The name of the pool
 	name string
@@ -139,14 +137,20 @@ func (p *pool) Go(ctx context.Context, f func()) {
 
 	atomic.AddInt32(&p.task, 1)
 
-	// 直到 go worker == pool cap 最大 worker 容量
-	if p.Work() < p.cap {
-		// worker add 1
-		atomic.AddInt32(&p.work, 1)
+	for {
+		work := atomic.LoadInt32(&p.work)
+		// 直到 go worker == pool cap 最大 worker 容量
+		if work < p.cap {
+			if !atomic.CompareAndSwapInt32(&p.work, work, work+1) {
+				continue
+			}
 
-		w := workerPool.Get().(*worker)
-		w.pool = p
-		w.run()
+			w := workerPool.Get().(*worker)
+			w.pool = p
+
+			go w.run()
+		}
+		break
 	}
 }
 

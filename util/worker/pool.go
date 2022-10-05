@@ -10,7 +10,7 @@ import (
 
 // Pool go pool
 type Pool interface {
-	// CtxGo executes f and accepts the context.
+	// Go executes f and accepts the context.
 	Go(ctx context.Context, f func())
 
 	// Name returns the corresponding pool name.
