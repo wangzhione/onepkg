@@ -6,7 +6,7 @@
 
 You can use `go get -u github.com/wangzhione/onepkg@latest` to get or update `onepkg`
 
-## 后记
+## [后记](https://www.youtube.com/watch?v=GHXr4bBxHCo)
 
 题破山寺后禅院
 
