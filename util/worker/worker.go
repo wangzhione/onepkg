@@ -2,10 +2,11 @@ package worker
 
 import (
 	"context"
-	"onepkg/util/log"
 	"runtime/debug"
 	"sync"
 	"sync/atomic"
+
+	"onepkg/util/log"
 )
 
 var (
